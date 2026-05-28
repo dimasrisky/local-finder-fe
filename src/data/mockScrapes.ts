@@ -1,0 +1,15 @@
+export const ALL_SCRAPES = [
+  { id: 1,  keyword: "0ioj908u98",              status: "Done",       totalData: 28,  date: "03/05/2026, 21.52.41" },
+  { id: 2,  keyword: "barbershop bandung",       status: "Processing", totalData: 0,   date: "03/05/2026, 21.21.15" },
+  { id: 3,  keyword: "coffee shop jakarta",      status: "Done",       totalData: 85,  date: "03/05/2026, 19.21.45" },
+  { id: 4,  keyword: "gym surabaya",             status: "Failed",     totalData: 0,   date: "02/05/2026, 18.21.45" },
+  { id: 5,  keyword: "restoran seafood bali",    status: "Done",       totalData: 142, date: "02/05/2026, 13.21.45" },
+  { id: 6,  keyword: "klinik gigi jakarta selatan", status: "Done",   totalData: 67,  date: "30/04/2026, 21.21.45" },
+  { id: 7,  keyword: "coffee shop bandung",      status: "Done",       totalData: 98,  date: "29/04/2026, 21.21.45" },
+  { id: 8,  keyword: "warung makan yogyakarta",  status: "Done",       totalData: 156, date: "28/04/2026, 21.21.45" },
+  { id: 9,  keyword: "barbershop jakarta",       status: "Done",       totalData: 73,  date: "27/04/2026, 21.21.45" },
+  { id: 10, keyword: "gym fitness jakarta",      status: "Done",       totalData: 112, date: "26/04/2026, 21.21.45" },
+  { id: 11, keyword: "klinik kecantikan surabaya", status: "Done",    totalData: 88,  date: "23/04/2026, 21.21.45" },
+  { id: 12, keyword: "restoran padang jakarta",  status: "Done",       totalData: 184, date: "21/04/2026, 21.21.45" },
+  { id: 13, keyword: "coffee shop bali",         status: "Done",       totalData: 235, date: "19/04/2026, 21.21.45" },
+];
