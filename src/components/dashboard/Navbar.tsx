@@ -1,10 +1,54 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { IconPin, IconGrid, IconTable, IconChevronDown } from './icons';
+import { IconPin, IconGrid, IconTable, IconChevronDown, IconLogout } from './icons';
+import { authUtils } from '../../utils/auth';
 
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [userData, setUserData] = useState<any>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Load user data on mount
+  useEffect(() => {
+    const user = authUtils.getUserData();
+    setUserData(user);
+  }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setUserDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    authUtils.clearAuth();
+    setUserDropdownOpen(false);
+    navigate('/login');
+  };
+
+  const getUserInitials = () => {
+    if (userData?.fullName) {
+      return userData.fullName.charAt(0).toUpperCase();
+    }
+    if (userData?.username) {
+      return userData.username.charAt(0).toUpperCase();
+    }
+    return 'U';
+  };
+
+  const getUserEmail = () => {
+    return userData?.email || 'user@example.com';
+  };
 
   const getActivePage = () => {
     const path = location.pathname;
@@ -63,13 +107,35 @@ const Navbar: React.FC = () => {
         </div>
 
         {/* User */}
-        <button className="flex items-center gap-2 focus:outline-none">
-          <div className="w-7 h-7 rounded-full bg-indigo-600 flex items-center justify-center">
-            <span className="text-white text-xs font-semibold">Q</span>
-          </div>
-          <span className="hidden sm:block text-sm text-gray-700">QSq@gmail.com</span>
-          <IconChevronDown className="w-3.5 h-3.5 text-gray-400" />
-        </button>
+        <div className="relative" ref={dropdownRef}>
+          <button
+            onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+            className="flex items-center gap-2 focus:outline-none"
+          >
+            <div className="w-7 h-7 rounded-full bg-indigo-600 flex items-center justify-center">
+              <span className="text-white text-xs font-semibold">{getUserInitials()}</span>
+            </div>
+            <span className="hidden sm:block text-sm text-gray-700">{getUserEmail()}</span>
+            <IconChevronDown className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-200 ${userDropdownOpen ? 'rotate-180' : ''}`} />
+          </button>
+
+          {/* Dropdown Menu */}
+          {userDropdownOpen && (
+            <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-1 z-50">
+              <div className="px-4 py-2 border-b border-gray-100">
+                <p className="text-sm font-medium text-gray-900">{userData?.fullName || userData?.username || 'User'}</p>
+                <p className="text-xs text-gray-500">{getUserEmail()}</p>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-150"
+              >
+                <IconLogout className="w-4 h-4" />
+                Logout
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </nav>
   );

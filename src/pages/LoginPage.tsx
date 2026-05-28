@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Logo from "../components/Logo";
 import InputField from "../components/InputField";
 import GradientPanel from "../components/GradientPanel";
+import { authUtils } from "../utils/auth";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -48,12 +49,12 @@ const LoginPage = () => {
       if (response.ok) {
         // Store token in localStorage if provided
         if (data.token) {
-          localStorage.setItem('auth_token', data.token);
+          authUtils.setToken(data.token);
         }
 
         // Store user data if provided
         if (data.user) {
-          localStorage.setItem('user_data', JSON.stringify(data.user));
+          authUtils.setUserData(data.user);
         }
 
         showNotification('success', 'Login successful! Redirecting to dashboard...');
