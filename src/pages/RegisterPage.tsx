@@ -44,7 +44,7 @@ const RegisterPage = () => {
     setLoading(true);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || import.meta.env.BACKEND_URL}/api/v1/auth/register`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/register`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
