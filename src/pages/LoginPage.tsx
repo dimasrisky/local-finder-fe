@@ -45,22 +45,19 @@ const LoginPage = () => {
       });
 
       const data = await response.json();
-
       if (response.ok) {
-        // Store token in localStorage if provided
-        if (data.token) {
-          authUtils.setToken(data.token);
-        }
+        // Extract access token from response structure
+        const token = data.data?.accessToken;
 
-        // Store user data if provided
-        if (data.user) {
-          authUtils.setUserData(data.user);
+        // Store token in localStorage if provided
+        if (token) {
+          authUtils.setToken(token);
         }
 
         showNotification('success', 'Login successful! Redirecting to dashboard...');
-        setTimeout(() => {
-          navigate('/dashboard');
-        }, 1500);
+
+        // Navigate to dashboard - ProtectedRoute will fetch user data
+        navigate('/dashboard');
       } else {
         showNotification('error', data.message || 'Login failed. Please check your credentials.');
       }

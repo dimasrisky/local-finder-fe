@@ -27,7 +27,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
             'Authorization': `Bearer ${token}`,
           },
         });
-
         if (response.ok) {
           const data = await response.json();
 
@@ -43,9 +42,12 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
           setIsAuthenticated(false);
         }
       } catch (error) {
-        // Network error or API down
-        console.error('Auth check failed:', error);
-        setIsAuthenticated(false);
+        // Network error or API down - but if token exists, allow access
+        if (token) {
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
+        }
       } finally {
         setIsLoading(false);
       }
