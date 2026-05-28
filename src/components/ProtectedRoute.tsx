@@ -31,8 +31,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
           const data = await response.json();
 
           // Update user data in localStorage if available
-          if (data.user) {
-            authUtils.setUserData(data.user);
+          if (data) {
+            authUtils.setUserData(data.data);
           }
 
           setIsAuthenticated(true);
