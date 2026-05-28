@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { IconPin, IconGrid, IconTable, IconChevronDown, IconLogout } from './icons';
 import { authUtils } from '../../utils/auth';
@@ -7,14 +7,8 @@ const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
-  const [userData, setUserData] = useState<any>(null);
+  const [userData] = useState<{ fullName?: string; username?: string; email?: string } | null>(authUtils.getUserData());
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // Load user data on mount
-  useEffect(() => {
-    const user = authUtils.getUserData();
-    setUserData(user);
-  }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -53,7 +47,7 @@ const Navbar: React.FC = () => {
   const getActivePage = () => {
     const path = location.pathname;
     if (path === '/dashboard') return 'dashboard';
-    if (path.startsWith('/scrape')) return 'scrape';
+    if (path.startsWith('/dashboard/scrape')) return 'scrape';
     return 'dashboard';
   };
 
@@ -65,7 +59,7 @@ const Navbar: React.FC = () => {
         navigate('/dashboard');
         break;
       case 'scrape':
-        navigate('/scrape');
+        navigate('/dashboard/scrape');
         break;
       default:
         navigate('/dashboard');

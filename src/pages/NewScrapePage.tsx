@@ -12,7 +12,7 @@ const NewScrapePage: React.FC = () => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      navigate('/scrape');
+      navigate('/dashboard/scrape');
     }, 1800);
   };
 
@@ -20,7 +20,7 @@ const NewScrapePage: React.FC = () => {
     <div className="max-w-screen-xl mx-auto px-4 sm:px-8 py-8">
       {/* Back */}
       <button
-        onClick={() => navigate('/scrape')}
+        onClick={() => navigate('/dashboard/scrape')}
         className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition duration-150 mb-6 focus:outline-none"
       >
         <IconArrowLeft className="w-4 h-4" /> Back to scrapes

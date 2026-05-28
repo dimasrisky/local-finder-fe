@@ -18,7 +18,7 @@ const DashboardPage: React.FC = () => {
           <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
           <p className="text-sm text-gray-400 mt-0.5">Quick overview of your scraping activity.</p>
         </div>
-        <NewScrapeBtn onClick={() => navigate('/scrape/new')} />
+        <NewScrapeBtn onClick={() => navigate('/dashboard/new')} />
       </div>
 
       {/* Stat cards */}
@@ -62,7 +62,7 @@ const DashboardPage: React.FC = () => {
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
           <h2 className="text-sm font-semibold text-gray-900">Recent scrapes</h2>
           <button
-            onClick={() => navigate('/scrape')}
+            onClick={() => navigate('/dashboard/scrape')}
             className="text-sm text-indigo-600 font-medium hover:underline focus:outline-none"
           >
             View all
@@ -92,7 +92,7 @@ const DashboardPage: React.FC = () => {
                   <td className="px-5 py-3.5 text-gray-400 text-xs whitespace-nowrap">{row.date}</td>
                   <td className="px-5 py-3.5 text-right">
                     <button
-                      onClick={() => navigate('/scrape')}
+                      onClick={() => navigate('/dashboard/scrape')}
                       className="text-indigo-600 text-sm font-medium hover:underline focus:outline-none"
                     >
                       View

@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import Logo from "../components/Logo";
 import InputField from "../components/InputField";
 import GradientPanel from "../components/GradientPanel";
-import { authUtils } from "../utils/auth";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -69,7 +68,7 @@ const RegisterPage = () => {
       } else {
         showNotification('error', data.message || 'Registration failed. Please try again.');
       }
-    } catch (error) {
+    } catch {
       showNotification('error', 'Network error. Please check your connection and try again.');
     } finally {
       setLoading(false);

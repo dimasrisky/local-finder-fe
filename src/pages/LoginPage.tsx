@@ -64,7 +64,7 @@ const LoginPage = () => {
       } else {
         showNotification('error', data.message || 'Login failed. Please check your credentials.');
       }
-    } catch (error) {
+    } catch {
       showNotification('error', 'Network error. Please check your connection and try again.');
     } finally {
       setLoading(false);

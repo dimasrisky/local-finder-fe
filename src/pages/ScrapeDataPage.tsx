@@ -21,7 +21,7 @@ const ScrapeDataPage: React.FC = () => {
           <h1 className="text-2xl font-bold text-gray-900">Scrape Data</h1>
           <p className="text-sm text-gray-400 mt-0.5">All your scraping jobs in one place.</p>
         </div>
-        <NewScrapeBtn onClick={() => navigate('/scrape/new')} />
+        <NewScrapeBtn onClick={() => navigate('/dashboard/new')} />
       </div>
 
       {/* Table card */}

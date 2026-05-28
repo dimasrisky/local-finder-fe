@@ -16,11 +16,11 @@ export const authUtils = {
   },
 
   // Get user data
-  getUserData: (): any => {
+  getUserData: (): { fullName?: string; username?: string; email?: string } | null => {
     const userData = localStorage.getItem(userDataKey);
     if (userData) {
       try {
-        return JSON.parse(userData);
+        return JSON.parse(userData) as { fullName?: string; username?: string; email?: string };
       } catch {
         return null;
       }
@@ -34,7 +34,7 @@ export const authUtils = {
   },
 
   // Set user data
-  setUserData: (userData: any): void => {
+  setUserData: (userData: { fullName?: string; username?: string; email?: string }): void => {
     localStorage.setItem(userDataKey, JSON.stringify(userData));
   },
 
