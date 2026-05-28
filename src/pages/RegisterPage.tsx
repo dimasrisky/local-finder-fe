@@ -1,14 +1,79 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "../components/Logo";
 import InputField from "../components/InputField";
-import PrimaryButton from "../components/PrimaryButton";
 import GradientPanel from "../components/GradientPanel";
 
 const RegisterPage = () => {
+  const navigate = useNavigate();
+  const [fullName, setFullName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState<{
+    type: 'success' | 'error';
+    message: string;
+  } | null>(null);
+
+  const showNotification = (type: 'success' | 'error', message: string) => {
+    setNotification({ type, message });
+    setTimeout(() => setNotification(null), 5000);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Validation
+    if (!fullName || !username || !email || !password || !confirm) {
+      showNotification('error', 'Please fill in all fields');
+      return;
+    }
+
+    if (password !== confirm) {
+      showNotification('error', 'Passwords do not match');
+      return;
+    }
+
+    if (password.length < 8) {
+      showNotification('error', 'Password must be at least 8 characters');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || import.meta.env.BACKEND_URL}/api/v1/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username,
+          email,
+          password,
+          fullName,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        showNotification('success', 'Registration successful! Redirecting to login...');
+        setTimeout(() => {
+          navigate('/login');
+        }, 2000);
+      } else {
+        showNotification('error', data.message || 'Registration failed. Please try again.');
+      }
+    } catch (error) {
+      showNotification('error', 'Network error. Please check your connection and try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
@@ -30,8 +95,37 @@ const RegisterPage = () => {
             </p>
           </div>
 
+          {/* Notification */}
+          {notification && (
+            <div
+              className={`p-4 rounded-lg text-sm ${
+                notification.type === 'success'
+                  ? 'bg-green-50 text-green-800 border border-green-200'
+                  : 'bg-red-50 text-red-800 border border-red-200'
+              }`}
+            >
+              {notification.message}
+            </div>
+          )}
+
           {/* Form */}
-          <div className="flex flex-col gap-5">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            <InputField
+              label="Full Name"
+              id="reg-fullname"
+              type="text"
+              placeholder="John Doe"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+            />
+            <InputField
+              label="Username"
+              id="reg-username"
+              type="text"
+              placeholder="johndoe"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
             <InputField
               label="Email"
               id="reg-email"
@@ -57,9 +151,15 @@ const RegisterPage = () => {
               onChange={(e) => setConfirm(e.target.value)}
             />
             <div className="mt-1">
-              <PrimaryButton>Create account</PrimaryButton>
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-semibold rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed"
+              >
+                {loading ? 'Creating account...' : 'Create account'}
+              </button>
             </div>
-          </div>
+          </form>
 
           {/* Footer link */}
           <p className="mt-6 text-center text-sm text-gray-500">
