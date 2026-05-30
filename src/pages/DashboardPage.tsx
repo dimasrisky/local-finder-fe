@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { data, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { IconTable, IconTrend, IconSearch } from '../components/dashboard/icons';
 import StatCard from '../components/dashboard/StatCard';
 import NewScrapeBtn from '../components/dashboard/NewScrapeBtn';
@@ -11,6 +11,12 @@ const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
   const recent = ALL_SCRAPES.slice(0, 5);
   const [stats, setStats] = useState<{ totalLocations: number, totalLocationItems: number, currentRequest: number }>()
+  const [userData] = useState<{ fullName?: string; username?: string; email?: string, currentRequest?: number } | null>(authUtils.getUserData());
+
+  const currentUsage = userData?.currentRequest || 0;
+  const maxLimit = 3;
+  const remainingRequests = maxLimit - currentUsage;
+  const usagePercentage = Math.min((currentUsage / maxLimit) * 100, 100);
 
   useEffect(() => {
     (async () => {
@@ -49,7 +55,7 @@ const DashboardPage: React.FC = () => {
         />
         <StatCard
           label="Remaining today"
-          value={`${stats?.currentRequest.toString() || "0"} / 3`}
+          value={`${remainingRequests} / ${maxLimit}`}
           iconBg="bg-amber-50"
           icon={<IconSearch className="w-4 h-4 text-amber-500" />}
         />
@@ -60,12 +66,14 @@ const DashboardPage: React.FC = () => {
         <div className="flex items-center justify-between mb-2">
           <div>
             <p className="text-sm font-medium text-gray-800">Daily scrape limit</p>
-            <p className="text-xs text-gray-400 mt-0.5">0 of 3 used today</p>
+            <p className="text-xs text-gray-400 mt-0.5">{currentUsage} of {maxLimit} used today</p>
           </div>
-          <span className="text-sm font-semibold text-indigo-600">Available</span>
+          <span className="text-sm font-semibold text-indigo-600">
+            {remainingRequests > 0 ? 'Available' : 'Limit reached'}
+          </span>
         </div>
         <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
-          <div className="h-full w-0 bg-indigo-500 rounded-full" />
+          <div className={`h-full w-[${usagePercentage}%] bg-indigo-500 rounded-full transition-all duration-300`} />
         </div>
       </div>
 

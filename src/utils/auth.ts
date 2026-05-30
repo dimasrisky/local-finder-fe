@@ -34,7 +34,7 @@ export const authUtils = {
   },
 
   // Set user data
-  setUserData: (userData: { fullName?: string; username?: string; email?: string }): void => {
+  setUserData: (userData: { fullName?: string; username?: string; email?: string, currentRequest?: number }): void => {
     localStorage.setItem(userDataKey, JSON.stringify(userData));
   },
 

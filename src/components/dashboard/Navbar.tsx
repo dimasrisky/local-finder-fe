@@ -7,7 +7,7 @@ const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
-  const [userData] = useState<{ fullName?: string; username?: string; email?: string } | null>(authUtils.getUserData());
+  const [userData] = useState<{ fullName?: string; username?: string; email?: string, currentRequest?: number } | null>(authUtils.getUserData());
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown when clicking outside
