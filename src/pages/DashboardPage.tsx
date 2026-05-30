@@ -1,14 +1,26 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { data, useNavigate } from 'react-router-dom';
 import { IconTable, IconTrend, IconSearch } from '../components/dashboard/icons';
 import StatCard from '../components/dashboard/StatCard';
 import NewScrapeBtn from '../components/dashboard/NewScrapeBtn';
 import StatusBadge from '../components/dashboard/StatusBadge';
 import { ALL_SCRAPES } from '../data/mockScrapes';
+import { authUtils } from '../utils/auth';
 
 const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
   const recent = ALL_SCRAPES.slice(0, 5);
+  const [stats, setStats] = useState<{ totalLocations: number, totalLocationItems: number, currentRequest: number }>()
+
+  useEffect(() => {
+    (async () => {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/dashboard/stats`, {
+          headers: authUtils.getAuthHeaders()
+        })
+        const { data } = await response.json()
+        setStats(data)
+      })();
+  }, [])
 
   return (
     <div className="max-w-screen-xl mx-auto px-4 sm:px-8 py-8 space-y-6">
@@ -25,19 +37,19 @@ const DashboardPage: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <StatCard
           label="Total scrapes"
-          value="13"
+          value={stats?.totalLocations.toString() || "0"}
           iconBg="bg-blue-50"
           icon={<IconTable className="w-4 h-4 text-blue-500" />}
         />
         <StatCard
           label="Data collected"
-          value="1.268"
+          value={stats?.totalLocationItems.toString() || "0"}
           iconBg="bg-emerald-50"
           icon={<IconTrend className="w-4 h-4 text-emerald-500" />}
         />
         <StatCard
           label="Remaining today"
-          value="3 / 3"
+          value={`${stats?.currentRequest.toString() || "0"} / 3`}
           iconBg="bg-amber-50"
           icon={<IconSearch className="w-4 h-4 text-amber-500" />}
         />
