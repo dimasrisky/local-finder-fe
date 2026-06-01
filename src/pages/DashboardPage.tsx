@@ -4,14 +4,31 @@ import { IconTable, IconTrend, IconSearch } from '../components/dashboard/icons'
 import StatCard from '../components/dashboard/StatCard';
 import NewScrapeBtn from '../components/dashboard/NewScrapeBtn';
 import StatusBadge from '../components/dashboard/StatusBadge';
-import { ALL_SCRAPES } from '../data/mockScrapes';
 import { authUtils } from '../utils/auth';
+
+interface Location {
+  id: number;
+  createdAt: string;
+  name: string;
+  searchQuery: string;
+  totalItems: number;
+  status: string;
+}
+
+interface LocationResponse {
+  data: Location[];
+  meta: {
+    page: number;
+    totalPage: number;
+    totalData: number;
+  };
+}
 
 const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
-  const recent = ALL_SCRAPES.slice(0, 5);
   const [stats, setStats] = useState<{ totalLocations: number, totalLocationItems: number, currentRequest: number }>()
   const [userData] = useState<{ fullName?: string; username?: string; email?: string, currentRequest?: number } | null>(authUtils.getUserData());
+  const [recentScrapes, setRecentScrapes] = useState<Location[]>([]);
 
   const currentUsage = userData?.currentRequest || 0;
   const maxLimit = 3;
@@ -25,6 +42,16 @@ const DashboardPage: React.FC = () => {
         })
         const { data } = await response.json()
         setStats(data)
+      })();
+  }, [])
+
+  useEffect(() => {
+    (async () => {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/location?limit=8`, {
+          headers: authUtils.getAuthHeaders()
+        })
+        const result: LocationResponse = await response.json()
+        setRecentScrapes(result.data)
       })();
   }, [])
 
@@ -104,12 +131,12 @@ const DashboardPage: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              {recent.map((row) => (
+              {recentScrapes.map((row) => (
                 <tr key={row.id} className="hover:bg-gray-50/60 transition duration-100">
-                  <td className="px-5 py-3.5 text-gray-800 font-medium">{row.keyword}</td>
+                  <td className="px-5 py-3.5 text-gray-800 font-medium">{row.searchQuery}</td>
                   <td className="px-5 py-3.5"><StatusBadge status={row.status} /></td>
-                  <td className="px-5 py-3.5 text-gray-600">{row.totalData}</td>
-                  <td className="px-5 py-3.5 text-gray-400 text-xs whitespace-nowrap">{row.date}</td>
+                  <td className="px-5 py-3.5 text-gray-600">{row.totalItems}</td>
+                  <td className="px-5 py-3.5 text-gray-400 text-xs whitespace-nowrap">{new Date(row.createdAt).toLocaleDateString()}</td>
                   <td className="px-5 py-3.5 text-right">
                     <button
                       onClick={() => navigate('/dashboard/scrape')}
