@@ -82,7 +82,7 @@ const DashboardPage: React.FC = () => {
         />
         <StatCard
           label="Remaining today"
-          value={`${remainingRequests} / ${maxLimit}`}
+          value={`${currentUsage} / ${maxLimit}`}
           iconBg="bg-amber-50"
           icon={<IconSearch className="w-4 h-4 text-amber-500" />}
         />
